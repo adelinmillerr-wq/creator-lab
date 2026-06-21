@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATOR LAB by ADELIN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-base:#08080f; --bg-mid:#0f0f20; --bg-card:#0d0d1a; --bg-card2:#0d0d1c;
+    --bg-border:#1a1a2e; --bg-muted:#4a4a6a;
+    --text-primary:#e8e8f2; --text-secondary:#8888b0; --text-muted:#4a4a6a;
+    --pink:#f093fb; --coral:#f5576c; --gold:#e8c97d; --cyan:#12c2e9; --violet:#c471f5;
+    --grad-main:linear-gradient(135deg,#f093fb,#f5576c);
+    --grad-moonlight:linear-gradient(135deg,#c471f5,#12c2e9);
+    --grad-gold:linear-gradient(135deg,#e8c97d,#f093fb);
+    --glow-pink:0 0 32px rgba(240,147,251,0.18);
+    --glow-gold:0 0 32px rgba(232,201,125,0.20);
+    --glow-cyan:0 0 32px rgba(18,194,233,0.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg-base);color:var(--text-primary);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;justify-content:center;-webkit-font-smoothing:antialiased;}
+  .app{width:100%;max-width:440px;min-height:100vh;position:relative;overflow-x:hidden;}
+  .ambient{position:fixed;top:-90px;left:50%;transform:translateX(-50%);width:720px;height:520px;border-radius:50%;pointer-events:none;z-index:0;transition:background .8s ease;}
+  .screen{position:relative;z-index:1;animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* HERO */
+  .hero{padding:38px 20px 20px;text-align:center;}
+  .brand-badge{display:inline-flex;align-items:center;gap:7px;background:#12121f;border:1px solid #2a2a42;border-radius:999px;padding:5px 13px;margin-bottom:20px;}
+  .brand-dot{width:6px;height:6px;border-radius:50%;background:var(--grad-main);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+  .brand-text{font-size:11px;color:#777;letter-spacing:.07em;text-transform:uppercase;}
+  .logo-row{display:flex;align-items:baseline;justify-content:center;gap:10px;white-space:nowrap;margin-top:2px;}
+  .logo-main{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,9vw,48px);letter-spacing:.02em;line-height:1;background:linear-gradient(135deg,#fff 38%,#9a9ac0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .logo-by{font-family:'Bebas Neue',sans-serif;font-size:clamp(13px,3.6vw,18px);color:#3a3a55;letter-spacing:.12em;}
+  .logo-adelin{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,9vw,48px);letter-spacing:.02em;line-height:1;background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:#a9a9cc;margin-top:10px;line-height:1.4;}
+
+  /* INTRO */
+  .intro{margin:18px 20px 0;background:var(--bg-card2);border:1px solid var(--bg-border);border-radius:20px;padding:20px;position:relative;overflow:hidden;}
+  .intro::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad-main);}
+  .intro-tag{display:inline-block;background:linear-gradient(135deg,#f093fb22,#f5576c22);border:1px solid #f093fb44;border-radius:999px;padding:4px 12px;font-size:10px;color:var(--pink);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;}
+  .intro-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:25px;letter-spacing:0;line-height:1.3;margin-bottom:14px;color:#ededf6;}
+  .intro-title span{color:#ededf6;background:none;-webkit-text-fill-color:currentColor;}
+  .intro-item{font-size:13.5px;color:#8d8db2;padding:8px 0;line-height:1.5;border-bottom:1px solid #14141f;}
+  .intro-item:last-of-type{border-bottom:none;}
+  .intro-item b{color:#d4d4ec;font-weight:600;}
+  .intro-foot{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--pink);margin-top:14px;line-height:1.5;}
+
+  /* SEARCH */
+  .search-wrap{padding:22px 20px 4px;position:relative;}
+  .search-box{display:flex;align-items:center;gap:10px;border-radius:14px;padding:15px 16px;position:relative;background:var(--bg-card);border:1.5px solid transparent;background-image:linear-gradient(var(--bg-card),var(--bg-card)),var(--grad-main);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 0 26px rgba(240,147,251,0.22);transition:box-shadow .25s;}
+  .search-box:focus-within{box-shadow:0 0 38px rgba(240,147,251,0.40);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:var(--text-primary);font-family:inherit;font-size:14.5px;}
+  .search-box input::placeholder{color:#7a7aa0;}
+  .search-ico{font-size:17px;opacity:1;}
+  .search-clear{color:var(--text-muted);font-size:18px;cursor:pointer;display:none;background:none;border:none;padding:0 2px;}
+
+  /* SECTION LABEL */
+  .section-label{color:#55557a;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin:26px 0 13px;padding:0 20px;font-weight:600;}
+  .section-label.first{margin-top:18px;}
+
+  /* START CARD */
+  .start-card{margin:14px 20px 0;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#15101f,#0e1420);border:1px solid #2a2348;border-radius:20px;padding:16px 18px;cursor:pointer;text-decoration:none;transition:transform .15s,border-color .2s;-webkit-tap-highlight-color:transparent;}
+  .start-card:active{transform:scale(.98);}
+  .start-ico{width:46px;height:46px;border-radius:14px;background:var(--grad-moonlight);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:var(--glow-cyan);}
+  .start-txt b{display:block;font-size:14.5px;color:#eaeaff;font-weight:700;}
+  .start-txt span{display:block;font-size:12px;color:#7a7aa0;margin-top:2px;}
+  .start-arrow{margin-left:auto;color:#3a3a5a;font-size:20px;}
+
+  /* WIDE BTN */
+  .wide-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 20px 0;}
+  .wide-btn{display:flex;flex-direction:column;gap:6px;background:var(--bg-card);border:1px solid var(--bg-border);border-radius:16px;padding:15px 16px;text-decoration:none;cursor:pointer;transition:transform .15s,border-color .2s;-webkit-tap-highlight-color:transparent;}
+  .wide-btn:active{transform:scale(.97);}
+  .wide-btn .em{font-size:20px;}
+  .wide-btn b{font-size:13.5px;color:#dadaf0;font-weight:600;}
+  .wide-btn span{font-size:11px;color:#62628a;}
+
+  /* GRID */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;}
+  .cat-card{background:var(--bg-card);border:1px solid #161626;border-radius:20px;padding:17px 15px 15px;text-align:left;cursor:pointer;position:relative;overflow:hidden;transition:border-color .2s,transform .15s;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;}
+  .cat-card:active{transform:scale(.96);}
+  .cat-shine{position:absolute;top:0;left:0;right:0;height:2px;border-radius:20px 20px 0 0;}
+  .cat-emoji{font-size:25px;margin-bottom:9px;display:block;}
+  .cat-title{font-weight:700;font-size:13.5px;color:#dde0ff;line-height:1.25;}
+  .cat-sub{font-size:11px;color:#4d4d72;margin-top:3px;flex:1;}
+  .cat-foot{display:flex;align-items:center;gap:6px;margin-top:11px;}
+  .cat-count{font-size:10px;color:#46466a;letter-spacing:.04em;}
+  .cat-dot{width:4px;height:4px;border-radius:50%;background:#2a2a42;}
+  .cat-soon{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(18,194,233,.3);border-radius:20px;padding:2px 7px;}
+  .cat-wide{grid-column:1/-1;}
+
+  /* CAT ROWS (горизонтальные кнопки) */
+  .cat-list{padding:0 20px;display:flex;flex-direction:column;gap:10px;}
+  .cat-row{display:flex;align-items:center;gap:14px;background:var(--bg-card);border:1px solid #161626;border-radius:16px;padding:14px 16px 14px 18px;cursor:pointer;text-align:left;width:100%;font-family:inherit;position:relative;overflow:hidden;transition:transform .15s,border-color .2s;-webkit-tap-highlight-color:transparent;}
+  .cat-row:active{transform:scale(.985);}
+  .cat-row .edge{position:absolute;left:0;top:0;bottom:0;width:3px;}
+  .cat-row .ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0;}
+  .cat-row .tx{flex:1;min-width:0;}
+  .cat-row .tx b{display:block;font-size:14.5px;color:#e2e2f5;font-weight:700;}
+  .cat-row .tx span{display:block;font-size:11.5px;color:#5a5a7e;margin-top:2px;}
+  .cat-row .ct{font-size:11px;color:#46466a;flex-shrink:0;}
+  .cat-row .ar{color:#3a3a5a;font-size:20px;flex-shrink:0;}
+
+  /* PROGRESS */
+  .progress-card{margin:0 20px 4px;background:var(--bg-card2);border:1px solid #1d1d33;border-radius:16px;padding:15px 17px;}
+  .progress-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#bdbde0;font-weight:600;margin-bottom:11px;}
+  .progress-top span:last-child{color:var(--pink);font-weight:800;}
+  .progress-bar{height:8px;border-radius:8px;background:#16162a;overflow:hidden;}
+  .progress-fill{height:100%;width:0;border-radius:8px;background:var(--grad-main);transition:width .4s ease;box-shadow:var(--glow-pink);}
+  .progress-sub{font-size:11px;color:#5a5a7e;margin-top:9px;}
+
+  /* CHECK (галочка пройдено) */
+  .check{flex-shrink:0;width:27px;height:27px;border-radius:8px;border:1.5px solid #2e2e48;background:#0c0c16;color:#fff;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;padding:0;font-family:inherit;}
+  .check:active{transform:scale(.9);}
+  .check.on{background:var(--grad-main);border-color:transparent;box-shadow:var(--glow-pink);}
+
+  /* BOTTOM */
+  .bottom{padding:8px 20px 42px;}
+  .reviews-cta{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#1a1208,#241a0c);border:1px solid rgba(232,201,125,.28);border-radius:18px;padding:16px 18px;text-decoration:none;cursor:pointer;transition:transform .15s,border-color .2s;margin-bottom:10px;-webkit-tap-highlight-color:transparent;}
+  .reviews-cta:active{transform:scale(.98);}
+  .reviews-cta .em{width:44px;height:44px;border-radius:13px;background:var(--grad-gold);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:var(--glow-gold);}
+  .reviews-cta b{display:block;font-size:14px;color:var(--gold);font-weight:700;}
+  .reviews-cta span{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:#bba76a;margin-top:1px;}
+  .reviews-cta .ar{margin-left:auto;color:#6a5e3a;font-size:20px;}
+
+  .buy-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px;border-radius:16px;font-family:inherit;font-size:15.5px;font-weight:700;color:#fff;text-decoration:none;cursor:pointer;background:var(--grad-main);border:none;margin-bottom:10px;transition:opacity .2s,transform .15s;letter-spacing:.02em;box-shadow:var(--glow-pink);}
+  .buy-btn:active{transform:scale(.98);opacity:.92;}
+  .mini-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:14px;border-radius:14px;font-family:inherit;font-size:13.5px;font-weight:600;text-decoration:none;cursor:pointer;transition:transform .15s,border-color .2s;background:linear-gradient(135deg,#0a1018,#0f1726);border:1px solid rgba(18,194,233,.3);color:var(--cyan);margin-bottom:10px;}
+  .mini-btn:active{transform:scale(.98);}
+  .mini-btn.contact{background:linear-gradient(135deg,#16101f,#1c1024);border:1px solid rgba(240,147,251,.34);color:var(--pink);margin-bottom:14px;}
+  .mini-btn:active{transform:scale(.98);}
+
+  .cert-note{background:var(--bg-card2);border:1px solid rgba(232,201,125,.22);border-radius:16px;padding:15px 17px;display:flex;gap:12px;align-items:flex-start;}
+  .cert-note .em{font-size:22px;line-height:1.1;}
+  .cert-note b{display:block;font-size:13px;color:var(--gold);font-weight:700;margin-bottom:3px;letter-spacing:.02em;}
+  .cert-note p{font-size:12.5px;color:#7d7da0;line-height:1.5;}
+
+  /* CATEGORY SCREEN */
+  .cat-header{padding:30px 20px 18px;border-bottom:1px solid #0f0f1e;position:sticky;top:0;background:var(--bg-base);z-index:10;}
+  .back-btn{background:#0f0f1a;border:1px solid var(--bg-border);color:#7a7aa0;border-radius:10px;padding:7px 14px;font-size:13px;cursor:pointer;margin-bottom:18px;font-family:inherit;transition:color .2s;display:inline-flex;align-items:center;gap:6px;}
+  .back-btn:active{color:#cacae8;}
+  .cat-info{display:flex;align-items:center;gap:14px;}
+  .cat-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0;}
+  .cat-name{font-family:'Bebas Neue',sans-serif;font-size:29px;letter-spacing:.03em;color:#fff;line-height:1;}
+  .cat-subtitle{font-size:12px;color:#55557a;margin-top:4px;}
+  .topics{padding:14px 20px 44px;}
+  .topic-item{display:flex;align-items:center;gap:13px;background:var(--bg-card);border:1px solid #161626;border-radius:14px;padding:13px 15px;margin-bottom:8px;text-decoration:none;transition:border-color .2s,transform .15s;-webkit-tap-highlight-color:transparent;}
+  .topic-item:active{transform:scale(.985);}
+  .topic-em{font-size:19px;flex-shrink:0;width:24px;text-align:center;}
+  .topic-body{flex:1;min-width:0;}
+  .topic-title{font-size:13.5px;font-weight:600;color:#d4d4f0;line-height:1.3;}
+  .topic-desc{font-size:11.5px;color:#50506e;margin-top:2px;}
+  .topic-arrow{color:#26263f;font-size:17px;flex-shrink:0;}
+  .topic-section{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6a6a92;font-weight:700;margin:20px 0 9px;padding-left:3px;}
+  .topic-section:first-child{margin-top:2px;}
+  .badge-new{font-size:8px;letter-spacing:.1em;font-weight:800;color:#fff;background:var(--grad-main);border-radius:5px;padding:2px 5px;margin-left:7px;vertical-align:middle;}
+  .soon-banner{background:var(--bg-card2);border:1px dashed #2a2a44;border-radius:14px;padding:18px;text-align:center;color:#62628a;font-size:13px;line-height:1.5;margin-top:8px;}
+  .soon-banner b{color:#9a9ac0;}
+
+  /* SEARCH RESULTS */
+  .sr-label{padding:18px 20px 6px;font-size:12px;color:#55557a;letter-spacing:.04em;}
+  .sr-cat{font-size:10px;color:var(--cyan);letter-spacing:.05em;text-transform:uppercase;margin-top:3px;}
+  .empty{padding:50px 30px;text-align:center;color:#55557a;}
+  .empty .em{font-size:34px;display:block;margin-bottom:12px;opacity:.6;}
+  .empty p{font-size:14px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="ambient" id="ambient"></div>
+  <div id="root"></div>
+</div>
+<script>
+/* ===== ДАННЫЕ ===== */
+const CLUB = "4429449228";                          // ID нового клуба (без -100)
+const T = n => `https://t.me/c/${CLUB}/${n}`;        // ссылка на пост/ветку
+const REVIEWS_URL = "https://t.me/creator_lab_otzyvy";
+const BUY_URL     = "https://t.me/payment_creator_bot";
+const SEEDANCE_BEZL = "https://t.me/seedance_bezl_bot";
+const NEWS_URL = T(880);
+
+/* Чтобы повесить плашку NEW — добавь new:true к нужной теме */
+const categories = [
+  { id:"club", emoji:"🏠", title:"Всё про клуб", subtitle:"Старт, правила, навигация",
+    bg:"var(--grad-moonlight)", glow:"#c471f5", group:0,
+    topics:[
+      {emoji:"🧭",title:"Навигация по клубу",desc:"Карта всех веток",url:T(3594)},
+      {emoji:"📜",title:"Правила группы",desc:"Как тут всё устроено",url:T(3)},
+      {emoji:"💬",title:"Чат для вопросов",desc:"Спрашивай что угодно",url:T(2)},
+      {emoji:"🎨",title:"Работы креаторов",desc:"Вдохновляйся чужими",url:T(5)},
+      {emoji:"⭐",title:"Отзывы и пожелания",desc:"Делись впечатлением",url:T(4)},
+      {emoji:"📦",title:"Материалы из старого клуба",desc:"PDF-архив",url:T(1076)},
+    ]},
+
+  { id:"photo", emoji:"📸", title:"Работа с фото", subtitle:"Генерация и обработка",
+    bg:"var(--grad-main)", glow:"#f093fb", group:1,
+    topics:[
+      {section:"С чего начать"},
+      {emoji:"📷",title:"Инструкции по работе с фото",desc:"База с нуля",url:T(121)},
+      {emoji:"🎥",title:"Видео: как работать с фото",desc:"Урок на практике",url:`https://t.me/c/${CLUB}/6/3874`},
+      {emoji:"🖼",title:"Базовые фото для генераций",desc:"С чего брать исходник",url:`https://t.me/c/${CLUB}/121/1000`},
+      {emoji:"🧑‍🚀",title:"Видео: создаём аватара с нуля",desc:"Свой персонаж",url:`https://t.me/c/${CLUB}/6/263`},
+      {emoji:"🧭",title:"Твой AI-гид по нейрофотосессии",desc:"Пошаговый помощник",url:`https://t.me/c/${CLUB}/121/184`},
+
+      {section:"Промпты и помощники"},
+      {emoji:"✨",title:"Авторские промпты для фотосессий",desc:"Серии кадров",url:T(17)},
+      {emoji:"🍌",title:"Промпты для фото в Нано-Банана",desc:"Готовые формулы",url:T(2756)},
+      {emoji:"🤝",title:"Помощник для Нано-Банана",desc:"Собирает промпт за тебя",url:`https://t.me/c/${CLUB}/121/927`},
+      {emoji:"📌",title:"Промпт для сохранения референса",desc:"Держим стиль кадра",url:`https://t.me/c/${CLUB}/121/813`},
+      {emoji:"⬆️",title:"Промпт для улучшения качества фото",desc:"Чётче и чище",url:`https://t.me/c/${CLUB}/121/634`},
+      {emoji:"🩹",title:"Реставрация старых фото",desc:"Вторая жизнь архиву",url:`https://t.me/c/${CLUB}/121/2913`},
+
+      {section:"Лицо и сходство"},
+      {emoji:"🎯",title:"Алгоритм портретного сходства",desc:"Чтобы это были вы",url:`https://t.me/c/${CLUB}/121/181`},
+      {emoji:"🪪",title:"Карта персонажей для лица",desc:"Консистентное лицо",url:`https://t.me/c/${CLUB}/121/422`},
+      {emoji:"🧍",title:"Карта персонажей в полный рост",desc:"Тот же герой целиком",url:`https://t.me/c/${CLUB}/121/397`},
+      {emoji:"🧬",title:"Токены внешности",desc:"Когда нейросеть меняет лицо",url:`https://t.me/c/${CLUB}/121/684`},
+      {emoji:"😊",title:"Коды мимики",desc:"Управляем эмоциями",url:`https://t.me/c/${CLUB}/121/633`},
+      {emoji:"💪",title:"Чек-лист: сохранение телосложения",desc:"Мужские и женские промпты",url:`https://t.me/c/${CLUB}/121/635`},
+
+      {section:"Ракурсы, позы, свет"},
+      {emoji:"📐",title:"Основные ракурсы для фото",desc:"База ракурсов",url:`https://t.me/c/${CLUB}/121/156`},
+      {emoji:"🔥",title:"Трендовые ракурсы для фото",desc:"Что в моде",url:`https://t.me/c/${CLUB}/121/157`},
+      {emoji:"📝",title:"Шпаргалка для ракурсов",desc:"Всё под рукой",url:`https://t.me/c/${CLUB}/121/160`},
+      {emoji:"🔄",title:"Меняем ракурсы и позы с одного фото",desc:"Одно фото, много кадров",url:`https://t.me/c/${CLUB}/121/165?single`},
+      {emoji:"💡",title:"Подсказки по свету на фото",desc:"Свет решает всё",url:`https://t.me/c/${CLUB}/121/686?single`},
+      {emoji:"🌀",title:"Эффект motion blur",desc:"Туториал движения",url:`https://t.me/c/${CLUB}/121/302?single`},
+
+      {section:"Фотосессии и серии"},
+      {emoji:"🖼",title:"Фотосет из одной фотографии",desc:"Серия из единственного кадра",url:`https://t.me/c/${CLUB}/121/135?single`},
+      {emoji:"👤",title:"Гайд по генерациям фото 40+",desc:"Для зрелой аудитории",url:`https://t.me/c/${CLUB}/121/176`},
+      {emoji:"📸",title:"Fashion-кампейн: локация и образ",desc:"Сохраняем стиль и место",url:`https://t.me/c/${CLUB}/121/172?single`},
+      {emoji:"👗",title:"Шаблон для fashion-промптов",desc:"Готовая основа",url:`https://t.me/c/${CLUB}/121/2710`},
+      {emoji:"📍",title:"Серия промптов в одной локации",desc:"Единая съёмка",url:`https://t.me/c/${CLUB}/19/1912?single`},
+      {emoji:"🎬",title:"Подсказки для усиления сцен",desc:"Делаем кадр сочнее",url:`https://t.me/c/${CLUB}/121/2709`},
+      {emoji:"📌",title:"Фото в стиле Pinterest",desc:"Эстетика для ленты",url:`https://t.me/c/${CLUB}/121/2707?single`},
+
+      {section:"Раскадровки"},
+      {emoji:"🎞",title:"Универсальный промпт для раскадровки",desc:"Сцены по кадрам",url:`https://t.me/c/${CLUB}/121/757`},
+      {emoji:"🎞",title:"Раскадровка, универсальный промпт №2",desc:"Ещё вариант",url:`https://t.me/c/${CLUB}/19/1956`},
+
+      {section:"Коллажи"},
+      {emoji:"🧩",title:"Универсальный коллаж",desc:"На любой случай",url:`https://t.me/c/${CLUB}/121/2218`},
+      {emoji:"🎥",title:"Киношный коллаж",desc:"Атмосфера кадра",url:`https://t.me/c/${CLUB}/121/2221`},
+      {emoji:"📖",title:"Коллаж в стиле Vogue",desc:"Глянцевая подача",url:`https://t.me/c/${CLUB}/121/2220`},
+      {emoji:"🛍",title:"Коллаж для предметов",desc:"Для товаров",url:`https://t.me/c/${CLUB}/121/2219`},
+
+      {section:"Ещё по фото"},
+      {emoji:"🌊",title:"Всё про Midjourney",desc:"Гайды и приёмы",url:T(2722)},
+      {emoji:"🎥",title:"Видео о Midjourney",desc:"Разбор на видео",url:`https://t.me/c/${CLUB}/6/3180`},
+      {emoji:"🎥",title:"Видео о Midjourney, часть 2",desc:"Продолжение",url:`https://t.me/c/${CLUB}/6/3182`},
+      {emoji:"🧑‍🎤",title:"ИИ-инфлюенсер",desc:"Свой цифровой персонаж",url:T(736)},
+      {emoji:"🛍",title:"Предметка и рекламные макеты",desc:"Идеи и промпты",url:T(304)},
+      {emoji:"🎉",title:"Промпты для поздравлений",desc:"Готовые открытки",url:T(2666)},
+      {emoji:"🔥",title:"Трендовые генерации",desc:"Что залетает сейчас",url:T(2615)},
+      {emoji:"💥",title:"Трендовые генерации №2",desc:"Свежая подборка",url:T(425)},
+      {emoji:"😊",title:"Стикеры и эмодзи с ИИ",desc:"Свои паки",url:T(266)},
+      {emoji:"🖼",title:"Полезные программы для фотошопа",desc:"Софт для обработки",url:`https://t.me/c/${CLUB}/20/4580`},
+      {emoji:"🔞",title:"Генерации 18+",desc:"Для взрослой аудитории",url:T(1122)},
+    ]},
+
+  { id:"clothes", emoji:"👗", title:"Образы и одежда", subtitle:"Переодевания и стиль",
+    bg:"linear-gradient(135deg,#f093fb,#e8c97d)", glow:"#f093fb", group:1,
+    topics:[
+      {section:"Образы и примерка"},
+      {emoji:"👗",title:"Модные образы и переодевашки",desc:"Главная ветка",url:T(19)},
+      {emoji:"📖",title:"Инструкция по переодеваниям",desc:"Как это работает",url:`https://t.me/c/${CLUB}/19/1567`},
+      {emoji:"🧥",title:"Перенести аутфит с модели",desc:"Образ на себя",url:`https://t.me/c/${CLUB}/19/1520`},
+      {emoji:"⬜",title:"Перенос одежды на белый фон",desc:"Чистая выкладка",url:`https://t.me/c/${CLUB}/19/1047?single`},
+      {emoji:"👔",title:"Мужские переодевания",desc:"Для мужских образов",url:`https://t.me/c/${CLUB}/19/1631?single`},
+      {emoji:"👫",title:"Парные образы",desc:"Для двоих",url:`https://t.me/c/${CLUB}/19/1707`},
+      {emoji:"🏃‍♀️",title:"Спортивная одежда, женский промпт",desc:"Спорт-стиль",url:`https://t.me/c/${CLUB}/19/1783?single`},
+
+      {section:"Каталог и раскладка"},
+      {emoji:"🗂",title:"Фото с образом для каталога",desc:"Товарный вид",url:`https://t.me/c/${CLUB}/19/399?single`},
+      {emoji:"🧺",title:"Раскладка одежды",desc:"Аккуратный флэтлей",url:`https://t.me/c/${CLUB}/19/265`},
+      {emoji:"📦",title:"Раскладка одежды с модели",desc:"Снимаем образ в раскладку",url:`https://t.me/c/${CLUB}/19/1586?single`},
+
+      {section:"Анализ стиля"},
+      {emoji:"💄",title:"Анализ макияжа",desc:"Разбор мейка",url:`https://t.me/c/${CLUB}/19/654`},
+      {emoji:"💇‍♀️",title:"Анализ волос",desc:"Причёска и уход",url:`https://t.me/c/${CLUB}/19/655`},
+      {emoji:"🎨",title:"Анализ стиля",desc:"Общий образ",url:`https://t.me/c/${CLUB}/19/657`},
+    ]},
+
+  { id:"video", emoji:"🎬", title:"Работа с видео", subtitle:"Ролики и промпты",
+    bg:"linear-gradient(135deg,#f5576c,#c471f5)", glow:"#f5576c", group:1,
+    topics:[
+      {emoji:"📚",title:"Сборник всех видео-уроков",desc:"Вся видео-база",url:T(6)},
+      {emoji:"🎞",title:"Промпты для видео в разных нейросетях",desc:"Под любую модель",url:T(480)},
+      {emoji:"🔀",title:"Всё про переходы в видео",desc:"Эффектная склейка",url:T(2282)},
+      {emoji:"🎵",title:"Музыка и песни",desc:"Звук для роликов",url:T(230)},
+      {emoji:"🔊",title:"Видео: работа со звуком",desc:"Урок по звуку",url:`https://t.me/c/${CLUB}/6/3188`},
+    ]},
+
+  { id:"seedance", emoji:"🌀", title:"Seedance", subtitle:"Готовые идеи и промпты",
+    bg:"var(--grad-moonlight)", glow:"#12c2e9", group:1,
+    topics:[
+      {emoji:"🌀",title:"Всё про Seedance",desc:"Идеи и промпты",url:T(8)},
+      {emoji:"🍽",title:"Шаблон для генерации блюд",desc:"Любая еда красиво",url:`https://t.me/c/${CLUB}/8/2264`},
+      {emoji:"♾",title:"Видео с бесконечной петлёй",desc:"Залипательный луп",url:`https://t.me/c/${CLUB}/8/1424`},
+      {emoji:"🌙",title:"Танец при луне",desc:"Атмосферный приём",url:`https://t.me/c/${CLUB}/8/1405`},
+      {emoji:"🗺",title:"Карта персонажа",desc:"Консистентный герой",url:`https://t.me/c/${CLUB}/8/1397`},
+      {emoji:"📖",title:"Создаём видео с историей",desc:"Сюжетный ролик",url:`https://t.me/c/${CLUB}/6/258`},
+    ]},
+
+  { id:"montage", emoji:"🎞", title:"Монтаж", subtitle:"База и видеоуроки",
+    bg:"linear-gradient(135deg,#c471f5,#f093fb)", glow:"#c471f5", group:1,
+    topics:[
+      {emoji:"🧱",title:"База для монтажа",desc:"С чего начать",url:T(2311)},
+      {emoji:"📕",title:"Книга о монтаже",desc:"Теория под рукой",url:`https://t.me/c/${CLUB}/20/4578`},
+      {emoji:"⚙️",title:"Базовые настройки монтажа",desc:"Видеоурок",url:`https://t.me/c/${CLUB}/6/253`},
+      {emoji:"🎬",title:"Простой способ монтажа",desc:"Для старта",url:`https://t.me/c/${CLUB}/6/2303`},
+      {emoji:"🎞",title:"Ещё один способ монтажа",desc:"Видеоурок",url:`https://t.me/c/${CLUB}/6/2152`},
+      {emoji:"📸",title:"Захват кадра",desc:"Приём в монтаже",url:`https://t.me/c/${CLUB}/6/2306`},
+      {emoji:"🖼",title:"Монтаж с помощью мокапа",desc:"Эффектная подача",url:`https://t.me/c/${CLUB}/6/2304`},
+      {emoji:"✨",title:"Эффектный монтаж из картинок",desc:"Оживляем фото",url:`https://t.me/c/${CLUB}/6/919`},
+      {emoji:"🧩",title:"Коллаж в CapCut",desc:"Несколько кадров вместе",url:`https://t.me/c/${CLUB}/6/2106?single`},
+      {emoji:"⏪",title:"Реверс в CapCut",desc:"Обратный эффект",url:`https://t.me/c/${CLUB}/6/2105`},
+      {emoji:"🎨",title:"Цветокоррекция HSL в CapCut",desc:"Правим цвета видео",url:`https://t.me/c/${CLUB}/6/252`},
+    ]},
+
+  { id:"cartoon", emoji:"🎨", title:"ИИ-мультфильм", subtitle:"От идеи до готового ролика",
+    bg:"linear-gradient(135deg,#12c2e9,#c471f5)", glow:"#12c2e9", group:1,
+    topics:[
+      {emoji:"🎬",title:"Способ 1: создаём мультфильм",desc:"Базовый путь, шаг за шагом",url:`https://t.me/c/${CLUB}/185/188?single`},
+      {emoji:"💡",title:"Визуализация идеи",desc:"Превращаем мысль в картинку",url:`https://t.me/c/${CLUB}/185/196`},
+      {emoji:"🎞",title:"Раскадровка мультфильма",desc:"Сцены по кадрам",url:`https://t.me/c/${CLUB}/185/201`},
+      {emoji:"🧑‍🎨",title:"Создание персонажей",desc:"Свои герои",url:`https://t.me/c/${CLUB}/185/204`},
+      {emoji:"✨",title:"Анимация",desc:"Оживляем кадры",url:`https://t.me/c/${CLUB}/185/213`},
+      {emoji:"✂️",title:"Монтаж мультфильма",desc:"Собираем всё в ролик",url:`https://t.me/c/${CLUB}/185/215`},
+      {emoji:"🎬",title:"Способ 2: создаём мультфильм",desc:"Альтернативный путь",url:`https://t.me/c/${CLUB}/185/334`},
+      {emoji:"🎨",title:"Подборка стилей для мультфильма",desc:"С чего вдохновиться",url:`https://t.me/c/${CLUB}/185/347`},
+      {emoji:"🪪",title:"Паспорт персонажей",desc:"Консистентный герой",url:`https://t.me/c/${CLUB}/185/815?single`},
+      {emoji:"🖌",title:"Стили мультфильмов",desc:"Разные направления",url:`https://t.me/c/${CLUB}/185/1029`},
+      {emoji:"⭐",title:"Работа с известными персонажами",desc:"Любимые герои в кадре",url:`https://t.me/c/${CLUB}/185/2115`},
+      {emoji:"🔥",title:"Трендовое видео с мультиками",desc:"Что залетает",url:`https://t.me/c/${CLUB}/185/2122`},
+      {emoji:"🎬",title:"Способ 3: создаём мультфильм",desc:"Ещё один подход",url:`https://t.me/c/${CLUB}/185/2124`},
+      {emoji:"📋",title:"Сториборд по инструкции к ИИ-мультфильму",desc:"Пошаговая раскадровка",url:`https://t.me/c/${CLUB}/185/2139`},
+      {emoji:"⌨️",title:"Промпты для персонажей",desc:"Готовые формулы",url:`https://t.me/c/${CLUB}/185/3458`},
+    ]},
+
+  { id:"claude", emoji:"🤖", title:"Всё про Claude", subtitle:"Скиллы и запросы",
+    bg:"linear-gradient(135deg,#e8c97d,#f5576c)", glow:"#e8c97d", group:2,
+    topics:[
+      {emoji:"🤖",title:"Всё про Claude",desc:"Обзор и база",url:T(7)},
+      {emoji:"🧩",title:"Скиллы для Claude",desc:"Готовые навыки",url:`https://t.me/c/${CLUB}/7/3631`},
+      {emoji:"⌨️",title:"Запросы для Claude",desc:"Рабочие промпты",url:`https://t.me/c/${CLUB}/7/642`},
+    ]},
+
+  { id:"gpt", emoji:"💬", title:"GPT и Gemini", subtitle:"Агенты и нейросети",
+    bg:"var(--grad-main)", glow:"#f093fb", group:2,
+    topics:[
+      {emoji:"💬",title:"Всё про GPT",desc:"И ссылки на агентов",url:T(2047)},
+      {emoji:"🛠",title:"Создаём GPT-агентов",desc:"Свой помощник",url:T(242)},
+      {emoji:"🌐",title:"GPT, Gemini и Flow",desc:"Всё вместе",url:T(11)},
+      {emoji:"📹",title:"Создаём бота в Gemini",desc:"Видеоурок-инструкция",url:`https://t.me/c/${CLUB}/6/929`},
+    ]},
+
+  { id:"tools", emoji:"🧰", title:"Инструменты", subtitle:"Тулзы, боты, шпаргалки",
+    bg:"linear-gradient(135deg,#12c2e9,#f093fb)", glow:"#12c2e9", group:2,
+    topics:[
+      {emoji:"🪄",title:"Мои тулзы для генерации",desc:"Seedance и раскадровка — внутри клуба",url:`https://t.me/c/${CLUB}/7/1476`},
+      {emoji:"🎥",title:"Запрос для киношных фото-промптов",desc:"Кинокадр в Claude",url:`https://t.me/c/${CLUB}/7/1466`},
+      {emoji:"♾",title:"Гайд по безлимиту в Seedance",desc:"Генерируй без границ",url:SEEDANCE_BEZL},
+      {emoji:"🧠",title:"Полезные инструменты для ИИ",desc:"Подборка сервисов",url:T(14)},
+      {emoji:"🔗",title:"Ссылки, боты и приложения",desc:"Рабочий набор",url:T(20)},
+      {emoji:"🏗",title:"Готовые конструкторы",desc:"Собери быстро",url:T(10)},
+      {emoji:"📝",title:"Шпаргалки для видео",desc:"Под рукой",url:T(364)},
+      {emoji:"🛡",title:"Список рабочих VPN",desc:"Доступ ко всему",url:T(935)},
+      {emoji:"💳",title:"Экономные подписки",desc:"Платить меньше",url:T(2215)},
+      {emoji:"🛒",title:"Как покупать готовые аккаунты",desc:"Видеоурок",url:`https://t.me/c/${CLUB}/6/999`},
+      {emoji:"🎞",title:"Как создать трейлер",desc:"Видеоурок",url:`https://t.me/c/${CLUB}/6/917`},
+    ]},
+
+  { id:"money", emoji:"💰", title:"Монетизация", subtitle:"Заработок и продвижение",
+    bg:"var(--grad-gold)", glow:"#e8c97d", group:3,
+    topics:[
+      {emoji:"🤝",title:"Как работать с клиентами",desc:"Бриф, продажи, оплата",url:T(2609)},
+      {emoji:"📈",title:"Всё про соцсети",desc:"Рост и продвижение",url:T(893)},
+      {emoji:"📌",title:"Уроки про Pinterest",desc:"Трафик из Pinterest",url:`https://t.me/c/${CLUB}/6/1024`},
+      {emoji:"🪙",title:"Криптокошелёк",desc:"Принимай оплату",url:T(18)},
+    ]},
+
+  { id:"dev", emoji:"🚀", title:"Разработка с нуля", subtitle:"Для продвинутых",
+    bg:"linear-gradient(135deg,#c471f5,#12c2e9)", glow:"#c471f5", group:3,
+    topics:[
+      {emoji:"🧬",title:"ИИ-модель с нуля",desc:"Своя нейромодель",url:T(13)},
+      {emoji:"🐍",title:"Создание ботов на Python",desc:"Автоматизация",url:T(15)},
+      {emoji:"🖥",title:"Создание сайтов с нуля",desc:"Свой ресурс",url:T(16)},
+    ]},
+];
+
+const GROUPS = {1:"Учусь работать", 2:"Нейросети и инструменты", 3:"Расту и зарабатываю"};
+
+/* ===== ЛОГИКА ===== */
+let screen="home", activeCatId=null, query="";
+
+const root = () => document.getElementById("root");
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const catById = id => categories.find(c=>c.id===id);
+
+/* ---- Прогресс: отметки пройденных тем с автосохранением ---- */
+const allUrls = new Set();
+categories.forEach(c=>c.topics.forEach(t=>{ if(t.url) allUrls.add(t.url); }));
+const totalTopics = ()=> allUrls.size;
+const STORE_KEY = "creatorlab_done_v1";
+let done = new Set();
+try{ const r=localStorage.getItem(STORE_KEY); if(r) done=new Set(JSON.parse(r)); }catch(e){}
+function saveDone(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify([...done])); }catch(e){} }
+function updateProgress(){
+  const total=totalTopics();
+  const d=[...done].filter(u=>allUrls.has(u)).length;
+  const pct=total?Math.round(d/total*100):0;
+  const f=document.getElementById("progFill"); if(f) f.style.width=pct+"%";
+  const p=document.getElementById("progPct"); if(p) p.textContent=pct+"%";
+  const s=document.getElementById("progSub"); if(s) s.textContent=`${d} из ${total} тем пройдено · сохраняется автоматически`;
+}
+function toggleDone(e,url){
+  e.preventDefault(); e.stopPropagation();
+  const btn=e.currentTarget;
+  if(done.has(url)){ done.delete(url); btn.classList.remove("on"); btn.textContent=""; }
+  else{ done.add(url); btn.classList.add("on"); btn.textContent="✓"; }
+  saveDone(); updateProgress();
+}
+
+function catRow(cat){
+  return `<button class="cat-row" onclick="openCat('${cat.id}')">
+    <span class="edge" style="background:${cat.bg}"></span>
+    <span class="ic" style="background:${cat.bg};box-shadow:0 0 18px ${cat.glow}33">${cat.emoji}</span>
+    <span class="tx"><b>${esc(cat.title)}</b><span>${esc(cat.subtitle)}</span></span>
+    <span class="ct">${cat.topics.filter(t=>t.url).length} тем</span>
+    <span class="ar">›</span>
+  </button>`;
+}
+
+function setAmbient(cat){
+  const a=document.getElementById("ambient");
+  a.style.background = cat
+    ? `radial-gradient(ellipse, ${cat.glow}22 0%, transparent 70%)`
+    : "radial-gradient(ellipse, rgba(240,147,251,0.13) 0%, transparent 70%)";
+}
+
+function topicRow(t){
+  const on=done.has(t.url);
+  return `<a class="topic-item" href="${t.url}" target="_blank" rel="noopener">
+    <span class="topic-em">${t.emoji}</span>
+    <div class="topic-body">
+      <div class="topic-title">${esc(t.title)}${t.new?'<span class="badge-new">NEW</span>':''}</div>
+      <div class="topic-desc">${esc(t.desc)}</div>
+    </div>
+    <button class="check ${on?'on':''}" onclick="toggleDone(event,'${t.url}')" aria-label="Отметить пройденным">${on?'✓':''}</button>
+  </a>`;
+}
+
+function catCard(cat){
+  return `<button class="cat-card" onclick="openCat('${cat.id}')">
+    <span class="cat-shine" style="background:${cat.bg}"></span>
+    <span class="cat-emoji">${cat.emoji}</span>
+    <div class="cat-title">${esc(cat.title)}</div>
+    <div class="cat-sub">${esc(cat.subtitle)}</div>
+    <div class="cat-foot">
+      <span class="cat-count">${cat.topics.filter(t=>t.url).length} тем</span>
+      ${cat.soon?'<span class="cat-dot"></span><span class="cat-soon">скоро ещё</span>':''}
+    </div>
+  </button>`;
+}
+
+function renderHome(){
+  setAmbient(null);
+  const grp = g => categories.filter(c=>c.group===g);
+  const groupBlock = g => `
+    <div class="section-label">${GROUPS[g]}</div>
+    <div class="cat-list">${grp(g).map(catRow).join("")}</div>`;
+
+  root().innerHTML = `
+  <div class="screen">
+    <div class="hero">
+      <div class="brand-badge"><span class="brand-dot"></span><span class="brand-text">закрытый клуб · онлайн</span></div>
+      <div class="logo-row"><span class="logo-main">CREATOR LAB</span><span class="logo-by">BY</span><span class="logo-adelin">ADELIN</span></div>
+      <div class="tagline">Пространство, где креаторы растут вместе</div>
+    </div>
+
+    <div class="intro">
+      <div class="intro-tag">Почему именно здесь</div>
+      <div class="intro-title">Не курс, который пылится. <span>Живой клуб, который растёт вместе с тобой.</span></div>
+      <div class="intro-item"><b>Всё в одном месте</b> — фото, видео, монтаж, Seedance, Claude, GPT и инструменты под рукой</div>
+      <div class="intro-item"><b>Готовые промпты и шаблоны</b> — берёшь и делаешь, не изобретая с нуля</div>
+      <div class="intro-item"><b>Обновляется постоянно</b> — новые приёмы появляются сразу, как только выходят</div>
+      <div class="intro-item"><b>Реальный заработок</b> — учишься продавать контент и брать клиентов</div>
+      <div class="intro-foot">Здесь результат виден с первого дня 🖤</div>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-ico">🔍</span>
+        <input id="search" type="text" placeholder="Найти тему: монтаж, промпты, Seedance…" oninput="onSearch(this.value)" value="${esc(query)}">
+        <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+      </div>
+    </div>
+    <div id="searchResults"></div>
+
+    <div id="homeBody">
+      <div class="progress-card">
+        <div class="progress-top"><span>📌 Отмечай темы, которые прошёл</span><span id="progPct">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+        <div class="progress-sub" id="progSub"></div>
+      </div>
+
+      <div class="wide-row">
+        <button class="wide-btn" onclick="openCat('club')"><span class="em">🏠</span><b>Всё про клуб</b><span>Правила и навигация</span></button>
+        <a class="wide-btn" href="${NEWS_URL}" target="_blank" rel="noopener"><span class="em">🆕</span><b>Новинки ИИ</b><span>Что нового в мире</span></a>
+      </div>
+
+      ${groupBlock(1)}
+      ${groupBlock(2)}
+      ${groupBlock(3)}
+
+      <div class="section-label">Полезное</div>
+      <div class="bottom">
+        <a class="reviews-cta" href="${REVIEWS_URL}" target="_blank" rel="noopener">
+          <div class="em">⭐</div>
+          <div><b>Отзывы учеников</b><span>Живые сообщения, без прикрас</span></div>
+          <span class="ar">›</span>
+        </a>
+        <a class="buy-btn" href="${BUY_URL}" target="_blank" rel="noopener">🎓 Получить доступ в клуб</a>
+        <a class="mini-btn" href="${SEEDANCE_BEZL}" target="_blank" rel="noopener">♾ Гайд по безлимиту в Seedance</a>
+        <a class="mini-btn contact" href="https://t.me/adelin_miller" target="_blank" rel="noopener">💌 Связаться с Аделин</a>
+        <div class="cert-note">
+          <span class="em">🏆</span>
+          <div>
+            <b>Сертификат</b>
+            <p>Прошёл клуб и применил на практике? Внутри можно получить именной сертификат CREATOR LAB — подтверждение твоих навыков для клиентов и портфолио.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  const inp=document.getElementById("search");
+  updateProgress();
+  if(query){ document.getElementById("searchClear").style.display="block"; renderSearch(); }
+}
+
+function renderCat(cat){
+  setAmbient(cat);
+  root().innerHTML = `
+  <div class="screen">
+    <div class="cat-header">
+      <button class="back-btn" onclick="goHome()">← Назад</button>
+      <div class="cat-info">
+        <div class="cat-icon" style="background:${cat.bg};box-shadow:0 0 22px ${cat.glow}33">${cat.emoji}</div>
+        <div><div class="cat-name">${esc(cat.title)}</div><div class="cat-subtitle">${esc(cat.subtitle)}</div></div>
+      </div>
+    </div>
+    <div class="topics">
+      ${cat.topics.map(t=>t.section?`<div class="topic-section">${esc(t.section)}</div>`:topicRow(t)).join("")}
+      ${cat.soon?`<div class="soon-banner">⏳ <b>${esc(cat.soon)}</b></div>`:''}
+    </div>
+  </div>`;
+}
+
+/* поиск по всем темам */
+function allTopics(){
+  const out=[];
+  categories.forEach(c=>c.topics.forEach(t=>{ if(t.url) out.push({...t,cat:c.title,catEmoji:c.emoji}); }));
+  return out;
+}
+function renderSearch(){
+  const box=document.getElementById("searchResults");
+  const body=document.getElementById("homeBody");
+  if(!query.trim()){ box.innerHTML=""; if(body) body.style.display=""; return; }
+  if(body) body.style.display="none";
+  const q=query.toLowerCase();
+  const res=allTopics().filter(t=>(t.title+" "+t.desc+" "+t.cat).toLowerCase().includes(q));
+  if(!res.length){
+    box.innerHTML=`<div class="empty"><span class="em">🤔</span><p>Ничего не нашлось по «${esc(query)}».<br>Попробуй другое слово.</p></div>`;
+    return;
+  }
+  box.innerHTML=`<div class="sr-label">Найдено: ${res.length}</div><div class="topics" style="padding-top:4px">${
+    res.map(t=>{const on=done.has(t.url);return `<a class="topic-item" href="${t.url}" target="_blank" rel="noopener">
+      <span class="topic-em">${t.emoji}</span>
+      <div class="topic-body">
+        <div class="topic-title">${esc(t.title)}</div>
+        <div class="sr-cat">${t.catEmoji} ${esc(t.cat)}</div>
+      </div>
+      <button class="check ${on?'on':''}" onclick="toggleDone(event,'${t.url}')" aria-label="Отметить пройденным">${on?'✓':''}</button>
+    </a>`;}).join("")
+  }</div>`;
+}
+
+function onSearch(v){
+  query=v;
+  document.getElementById("searchClear").style.display=v?"block":"none";
+  renderSearch();
+}
+function clearSearch(){
+  query="";
+  const inp=document.getElementById("search");
+  if(inp) inp.value="";
+  document.getElementById("searchClear").style.display="none";
+  renderSearch();
+}
+function openCat(id){ activeCatId=id; screen="category"; query=""; renderCat(catById(id)); window.scrollTo(0,0); }
+function goHome(){ screen="home"; renderHome(); window.scrollTo(0,0); }
+
+/* ---- Telegram Mini App: правильное открытие ссылок (фикс для iPhone) ---- */
+const tg = window.Telegram && window.Telegram.WebApp;
+if(tg){
+  try{ tg.ready(); tg.expand(); }catch(e){}
+  try{ if(tg.setHeaderColor) tg.setHeaderColor("#08080f"); if(tg.setBackgroundColor) tg.setBackgroundColor("#08080f"); }catch(e){}
+}
+document.addEventListener("click", function(e){
+  const a = e.target.closest ? e.target.closest('a[href^="https://t.me/"]') : null;
+  if(!a) return;
+  if(tg && typeof tg.openTelegramLink === "function"){
+    e.preventDefault();
+    try{ tg.openTelegramLink(a.getAttribute("href")); }catch(err){ window.open(a.href,"_blank"); }
+  }
+});
+
+renderHome();
+</script>
+</body>
+</html>
